@@ -64,16 +64,34 @@ def common_costs(word_dict):
 
   return cost_dict
 
-shortcut_list = []
-def make_shortcut(word, shortcut_list):
+def make_shortcut(word, shortcut_dict):
   if len(word) < 3:
     return
 
-  cost = calc_cost(word)
+  shortcuts = list(shortcut_dict.viewvalues())
+
+  split_string = split(word)
+  if split_string[0] not in shortcuts:
+    shortcut_dict[word] = split_string[0]
+  else:
+    shortcut_string = split_string[0]
+    split_string.remove(split_string[0])
+    for i in split_string:
+      temp = shortcut_string + i
+      if temp not in shortcuts and calc_cost(i)[0] < 2:
+        shortcut_dict[word] = temp
 
 if __name__ == '__main__':
   word_dict = open_word_dict()
   costs = common_costs(word_dict)
 
   sorted_costs = sorted_dict(costs)
-  print sorted_dict(costs)
+#  print sorted_dict(costs)
+
+  temp = {}
+
+  for key in word_dict:
+    make_shortcut(key, temp)
+
+  for i in temp:
+    print temp[i], i
