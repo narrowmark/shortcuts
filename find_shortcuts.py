@@ -64,6 +64,7 @@ def common_costs(word_dict):
 
   return cost_dict
 
+
 def make_shortcut(word, shortcut_dict):
   if len(word) < 3:
     return
@@ -81,17 +82,33 @@ def make_shortcut(word, shortcut_dict):
       if temp not in shortcuts and calc_cost(i)[0] < 2:
         shortcut_dict[word] = temp
 
+# Calculate the distances saved by a given shortcut and return
+# a dictionary of same.
+def calc_savings(shortcuts):
+  savings_dict = {}
+  for key in shortcuts:
+    word_cost = calc_cost(key)[0]
+    shortcut_cost = calc_cost(shortcuts[key])[0]
+    savings = word_cost - shortcut_cost
+    savings_dict[key] = savings
+#    print key, calc_cost(key)[0], calc_cost(shortcuts[key])[0]
+  return savings_dict
+
 if __name__ == '__main__':
   word_dict = open_word_dict()
   costs = common_costs(word_dict)
 
-  sorted_costs = sorted_dict(costs)
+#  sorted_costs = sorted_dict(costs)
 #  print sorted_dict(costs)
 
-  temp = {}
+  shortcuts = {}
+  for word in word_dict:
+    make_shortcut(word, shortcuts)
 
-  for key in word_dict:
-    make_shortcut(key, temp)
+  savings = calc_savings(shortcuts)
+  sorted_savings = sorted_dict(savings)
+  
+  print savings['just']
 
-  for i in temp:
-    print temp[i], i
+#  for word in sorted_savings:
+#    print word, savings[word]
